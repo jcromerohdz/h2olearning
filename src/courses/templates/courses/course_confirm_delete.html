@@ -1,0 +1,9 @@
+
+{% extends 'base.html' %}
+{% block content %}
+   <form method='POST' action=''>{% csrf_token %}
+    <p>Espero que que sepas que estas haciendo, ¿Estas seguro de borrar? <b>{{object.title}}</b></p> 
+    <input type='submit' value='Si' class='btn btn-danger'/>
+    <a href="{{object.get_absolute_url}}">Cancelar</a>
+   </form>
+{% endblock %}
