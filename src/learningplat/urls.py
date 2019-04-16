@@ -14,17 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 
 from videos import views
 
 
 urlpatterns = [
-    path('videos/', views.VideoListView.as_view(), name='videoslist'),
-    path('videos/create/', views.VideoCreateView.as_view(), name='videos-create'),
-    re_path(r'^videos/(?P<pk>\d+)/$', views.VideoDetailView.as_view(), name='video-detail'),
-    re_path(r'^videos/(?P<slug>[\w-]+)/$', views.VideoDetailView.as_view(), name='video-detail-slug'),
-    re_path(r'^videos/(?P<slug>[\w-]+)/edit/$', views.VideoUpdateView.as_view(), name='video-update'),
-    re_path(r'^videos/(?P<slug>[\w-]+)/delete/$', views.VideoDeleteView.as_view(), name='video-delete'),
+    re_path(r'^courses/', include('courses.urls', namespace='courses')),
+    re_path(r'^videos/', include('videos.urls', namespace='videos')),
+    # path('videos/', views.VideoListView.as_view(), name='videoslist'),
+    # path('videos/create/', views.VideoCreateView.as_view(), name='videos-create'),
+    # re_path(r'^videos/(?P<pk>\d+)/$', views.VideoDetailView.as_view(), name='video-detail'),
+    # re_path(r'^videos/(?P<slug>[\w-]+)/$', views.VideoDetailView.as_view(), name='video-detail-slug'),
+    # re_path(r'^videos/(?P<slug>[\w-]+)/edit/$', views.VideoUpdateView.as_view(), name='video-update'),
+    # re_path(r'^videos/(?P<slug>[\w-]+)/delete/$', views.VideoDeleteView.as_view(), name='video-delete'),
     path('admin/', admin.site.urls),
 ]

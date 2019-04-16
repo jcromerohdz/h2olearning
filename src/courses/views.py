@@ -8,7 +8,7 @@ from django.views.generic import (
 )
 
 from .models import Course 
-from video.mixins import MemberRequiredMixin, StaffMemberRequiredMixin
+from courses.mixins import MemberRequiredMixin, StaffMemberRequiredMixin
 # from .forms import VideoForm
 
 # Create your views here.
@@ -47,9 +47,9 @@ class CourseListView(StaffMemberRequiredMixin, ListView):
     #     return context
     
 
-class CourseUpdateView(StaffMemberRequiredMixin, UpdateView):
-    queryset = Course.objects.all()
-    form_class = CourseForm
+# class CourseUpdateView(StaffMemberRequiredMixin, UpdateView):
+#     queryset = Course.objects.all()
+#     form_class = CourseForm
 
 
 class CourseDeleteView(StaffMemberRequiredMixin, DeleteView):

@@ -3,12 +3,13 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
 
-class Course(model.Model):
-    user            = models.ForeingKey(setting.AUTH_USER_MODEL)
+class Course(models.Model):
+        
+    user            = models.ForeignKey(settings.AUTH_USER_MODEL,  on_delete=models.CASCADE)
     title           = models.CharField(max_length=120)
     slug            = models.SlugField(blank=True)
     description     = models.TextField()
-    price           = models.DecimalField()
+    price           = models.DecimalField(max_digits=5, decimal_places=2)
     updated         = models.DateTimeField(auto_now=True)
     timestamp       = models.DateTimeField(auto_now_add=True)
 
@@ -20,4 +21,4 @@ def pre_save_course_receiver(sender , instance, *args, **kwargs):
         instance.slug = slugify(instance.title) 
       
 
-pre_save.connect(pre_save_video_receiver, sender=Course)
+pre_save.connect(pre_save_course_receiver, sender=Course)
