@@ -4,6 +4,8 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
 
+from .utils import create_slug
+
 class Course(models.Model):
         
     user            = models.ForeignKey(settings.AUTH_USER_MODEL,  on_delete=models.CASCADE)
@@ -23,7 +25,8 @@ class Course(models.Model):
 
 def pre_save_course_receiver(sender , instance, *args, **kwargs): 
     if not instance.slug:
-        instance.slug = slugify(instance.title) 
+        # instance.slug = slugify(instance.title) 
+        instance.slug = create_slug(instance) 
       
 
 pre_save.connect(pre_save_course_receiver, sender=Course)

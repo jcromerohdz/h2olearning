@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import Http404
 from django.views.generic import (
     CreateView,
     DetailView,
@@ -20,7 +21,7 @@ class CourseCreateView(StaffMemberRequiredMixin, CreateView):
 
     def form_valid(self, form):
         obj = form.save(commit=False)
-        obj.user = self.reques.user
+        obj.user = self.request.user
         obj.save()
         return super(CourseCreateView, self).form_valid(form)
 
@@ -30,10 +31,17 @@ class CourseDetailView(MemberRequiredMixin, DetailView):
 
     # def get_object_or_404(Course, slug=self.kwargs.get("abc"))
 
-    def get_context_data(self,*args, **kwargs):
-        context = super(CourseDetailView, self).get_context_data(**kwargs)
-        print(context)
-        return context
+    # def get_context_data(self,*args, **kwargs):
+    #     context = super(CourseDetailView, self).get_context_data(**kwargs)
+    #     print(context)
+    #     return context
+
+    def get_object(self):
+        slug = self.kwargs.get("slug")
+        obj = Course.objects.filter(slug=slug)
+        if obj.exists():
+            return obj.first()
+        raise Http404
 
 
 class CourseListView(StaffMemberRequiredMixin, ListView):
@@ -57,14 +65,28 @@ class CourseUpdateView(StaffMemberRequiredMixin, UpdateView):
     queryset = Course.objects.all()
     form_class = CourseForm
 
-     def form_valid(self, form):
+    def form_valid(self, form):
         obj = form.save(commit=False)
         if not self.request.user.is_staff:
             obj.user = self.reques.user
         obj.save()
         return super(CourseUpdateView, self).form_valid(form)
 
+    def get_object(self):
+        slug = self.kwargs.get("slug")
+        obj = Course.objects.filter(slug=slug)
+        if obj.exists():
+            return obj.first()
+        raise Http404
+
 
 class CourseDeleteView(StaffMemberRequiredMixin, DeleteView):
     queryset = Course.objects.all()
     success_url = '/courses/'
+
+    def get_object(self):
+        slug = self.kwargs.get("slug")
+        obj = Course.objects.filter(slug=slug)
+        if obj.exists():
+            return obj.first()
+        raise Http404
