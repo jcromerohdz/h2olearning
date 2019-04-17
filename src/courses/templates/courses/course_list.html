@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="container">
+<div class='row'>
+  <div class='col-sm-6 offset-sm-43'>
     <h1>Courses</h1>
     {% include 'videos/snippets/video-search-form.html' with request=request%}
 
@@ -14,4 +17,7 @@
             <lu>No item found</li>
         {% endfor %}
     </ul>
+   </div> 
+</div>
+</div>
 {% endblock %}
