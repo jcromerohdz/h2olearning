@@ -1,18 +1,25 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Course, Lecture
+from .forms import LectureAdminForm
+from .models import Course, Lecture, MyCourses
+
+admin.site.register(MyCourses)
 
 class LectureInline(admin.TabularInline):
     model = Lecture
+    form = LectureAdminForm
     prepopulated_fields = {"slug": ("title",)}
+    # raw_id_filds = 'video'
+    extra = 1
 
 class CourseAdmin(admin.ModelAdmin):
     inlines = [LectureInline]
     list_filter = ['updated', 'timestamp']
-    list_display = ['title', 'updated', 'timestamp']
+    list_display = ['title', 'updated', 'timestamp', 'category']
     readonly_fields = ['updated', 'timestamp', 'short_title']
     search_field = ['title', 'description']
+    list_editable = ['category']
 
     class Meta:
         model = Course

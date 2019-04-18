@@ -1,10 +1,20 @@
 
 {% extends 'base.html' %}
+{% load humanize %}
 {% block content %}
-    <h1>Video - Details</h1>
+    <h1>{{ object.title }}</h1>
     {% include 'videos/snippets/video-search-form.html' with request=request%}
-    {{ object.title }}
-    {{ object.embed_code|safe }}
-    {{ object.updated }}
-    {{ object.timestamp }}
+    
+    {{ object.description|linebreaks }}
+    {{ object.display_price}}
+    
+    {{ object.price|floatformat:2|intcomma}} 
+
+    <ul>
+        {% for item in object.lecture_set.all %}
+            <li>{{ item.order }} <a href='{{ item.get_absulete_url }}'>{{ item.title }}</a></li>
+            {% empty %}
+            <li>No lecture found</li>
+        {% endfor %}
+    </ul>
 {% endblock %}
