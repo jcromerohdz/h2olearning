@@ -53,6 +53,15 @@ class CourseListView(StaffMemberRequiredMixin, ListView):
         query = request.GET.get('q')
         if query:
             qs = qs.filter(title__icontains=query)
+
+        if user.is_authenticated():
+            # qs =qs.prefetch_related(
+            #        Prefetch('owned',
+            #                  queryset=MyCourses.objects.filter(user=user),
+            #                  to_attr='is_owner')
+            # )
+            # print(qs)
+            qs = qs.owned(user)
         return qs
     
 
