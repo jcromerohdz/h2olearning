@@ -13,7 +13,7 @@ from .utils import create_slug, make_display_price
 
 class MyCourses(models.Model):
     user            = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    courses         = models.ManyToManyField('Course', blank=True)
+    courses         = models.ManyToManyField('Course', related_name='owned', blank=True)
     updated         = models.DateTimeField(auto_now=True)
     timestamp       = models.DateTimeField(auto_now_add=True)
 
@@ -51,7 +51,7 @@ class CourseQuerySet(models.query.QuerySet):
     
 
 class CourseManager(models.Manager):
-     def get_queryset(self):
+    def get_queryset(self):
         return CourseQuerySet(self.model, using=self._db)
 
     def all(self):
@@ -78,6 +78,10 @@ class Course(models.Model):
         # return "/videos/{slug_arg}".format(slug_arg=self.slug)
         return reverse('courses:detail', kwargs={'slug':self.slug})
 
+    def get_purchase_url(self):
+        # return "/videos/{slug_arg}".format(slug_arg=self.slug)
+        return reverse('courses:purchase', kwargs={'slug':self.slug})
+
     def display_price(self):
         return make_display_price(self.price)
 
@@ -100,7 +104,7 @@ class Lecture(models.Model):
     
     def get_absolute_url(self):
         # return "/videos/{slug_arg}".format(slug_arg=self.slug)
-        return reverse('courses:detail', kwargs={'slug':course.slug})
+        return reverse('courses:detail', kwargs={'slug':self.course.slug})
 
 def pre_save_course_receiver(sender , instance, *args, **kwargs): 
     if not instance.slug:

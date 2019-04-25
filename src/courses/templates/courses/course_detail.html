@@ -6,13 +6,16 @@
     {% include 'videos/snippets/video-search-form.html' with request=request%}
     
     {{ object.description|linebreaks }}
-    {{ object.display_price}}
+    {% if not object.is_owner%}
+        <a href='{{ object.get_purchase_url }}'>Purchase</a>
+         {{ object.display_price}}
+    {% endif %}
     
-    {{ object.price|floatformat:2|intcomma}} 
+    {% comment %} {{ object.price|floatformat:2|intcomma}}  {% endcomment %}
 
     <ul>
         {% for item in object.lecture_set.all %}
-            <li>{{ item.order }} <a href='{{ item.get_absulete_url }}'>{{ item.title }}</a></li>
+            <li>{{ item.order }} <a href='{{ item.get_absolute_url }}'>{{ item.title }}</a></li>
             {% empty %}
             <li>No lecture found</li>
         {% endfor %}

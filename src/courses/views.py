@@ -1,11 +1,15 @@
-from django.shortcuts import render, get_object_or_404
+import random
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
+from django.db.models import Prefetch
 from django.views.generic import (
     CreateView,
     DetailView,
     ListView,
     UpdateView,
-    DeleteView
+    DeleteView,
+    RedirectView
 )
 
 from .models import Course 
@@ -27,40 +31,46 @@ class CourseCreateView(StaffMemberRequiredMixin, CreateView):
 
 
 class CourseDetailView(MemberRequiredMixin, DetailView):
-    queryset = Course.objects.all()
-
-    # def get_object_or_404(Course, slug=self.kwargs.get("abc"))
-
-    # def get_context_data(self,*args, **kwargs):
-    #     context = super(CourseDetailView, self).get_context_data(**kwargs)
-    #     print(context)
-    #     return context
+    # queryset = Course.objects.all()
 
     def get_object(self):
         slug = self.kwargs.get("slug")
-        obj = Course.objects.filter(slug=slug)
-        if obj.exists():
-            return obj.first()
+        qs = Course.objects.filter(slug=slug).owned(self.request.user)
+        if qs.exists():
+            return qs.first()
         raise Http404
 
 
-class CourseListView(StaffMemberRequiredMixin, ListView):
+class CoursePurchaseView(LoginRequiredMixin, RedirectView):
+    # queryset = Course.objects.all()
+    permanet = False
+
+    def get_redirect_url(self, slug=None):
+        # slug = self.kwargs.get("slug")
+        qs = Course.objects.filter(slug=slug).owned(self.request.user)
+        if qs.exists():
+            user = self.request.user
+            if user.is_authenticated:
+                my_courses = user.mycourses
+                # If transacction is successful:
+                my_courses.courses.add(qs.first())
+                return (qs.first().get_absolute_url())
+            return (qs.first().get_absolute_url())
+        return "/courses/"
+
+
+class CourseListView(ListView):
     # queryset = Course.objects.all()
 
     def get_queryset(self):
         request = self.request
         qs = Course.objects.all()
         query = request.GET.get('q')
+        user = self.request.user
         if query:
             qs = qs.filter(title__icontains=query)
 
-        if user.is_authenticated():
-            # qs =qs.prefetch_related(
-            #        Prefetch('owned',
-            #                  queryset=MyCourses.objects.filter(user=user),
-            #                  to_attr='is_owner')
-            # )
-            # print(qs)
+        if user.is_authenticated:
             qs = qs.owned(user)
         return qs
     
@@ -77,7 +87,7 @@ class CourseUpdateView(StaffMemberRequiredMixin, UpdateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         if not self.request.user.is_staff:
-            obj.user = self.reques.user
+            obj.user = self.request.user
         obj.save()
         return super(CourseUpdateView, self).form_valid(form)
 

@@ -16,15 +16,16 @@
               <a href='{{ item.get_absolute_url}}'>{{item.title}}</a><small>
               {{item.lecture_set.count}}</small> |
             
-              {% if item in request.user.mycourses.courses.all %}
+              {% if item.is_owner %}
                 Owned
               {% else %}
+                <a href='{{ item.get_purchase_url }}'>Purchase</a>
                 {{item.display_price}}
               {% endif %}  
             
             </li>
             {%empty%}
-            <lu>No item found</li>
+            <li>No item found</li>
         {% endfor %}
     </ul>
    </div> 
