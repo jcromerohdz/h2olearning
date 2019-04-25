@@ -20,6 +20,7 @@ from videos import views
 
 
 urlpatterns = [
+    re_path(r'^categories/', include('categories.urls', namespace='categories')),
     re_path(r'^courses/', include('courses.urls', namespace='courses')),
     re_path(r'^videos/', include('videos.urls', namespace='videos')),
     # path('videos/', views.VideoListView.as_view(), name='videoslist'),
