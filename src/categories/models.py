@@ -5,6 +5,8 @@ from django.db.models.signals import pre_save
 from courses.utils import create_slug
 from courses.fields import PositionField
 
+from videos.models import Video
+
 class CategoryQuerySet(models.query.QuerySet):
     def active(self):
         return self.filter(active=True)
@@ -20,6 +22,7 @@ class CategoryManager(models.Manager):
 
 class Category(models.Model):
     title           = models.CharField(max_length=120)
+    video           = models.ForeignKey(Video, null=True, blank=True, on_delete=models.CASCADE)
     slug            = models.SlugField(blank=True)
     order           = PositionField(collection='category', blank=True)
     description     = models.TextField()
