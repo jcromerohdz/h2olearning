@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load render_video %}
+
+{% block title %}Videos | {{ block.super }} {% endblock title %}
+
+{% block content %}
+<div class='row'>
+   <div class='col-sm-6'>
+   {% include 'videos/snippets/video-search-form.html' with request=request %}
+
+   <h1>Hi</h1>
+
+   {{ object.title }}<br/>
+   {% render_video object.video %}
+   {% comment %} {{ object.video.embed_code|safe }} {% endcomment %}
+   {{ object.updated }}
+   {{ object.id }}
+   </div>
+</div>
+{% endblock %}

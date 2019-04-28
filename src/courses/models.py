@@ -79,7 +79,7 @@ class Course(models.Model):
     
     def get_absolute_url(self):
         # return "/videos/{slug_arg}".format(slug_arg=self.slug)
-        return reverse('courses:detail', kwargs={'slug':self.slug})
+        return reverse('courses:detail', kwargs={"slug": self.slug})
 
     def get_purchase_url(self):
         # return "/videos/{slug_arg}".format(slug_arg=self.slug)
@@ -107,7 +107,10 @@ class Lecture(models.Model):
     
     def get_absolute_url(self):
         # return "/videos/{slug_arg}".format(slug_arg=self.slug)
-        return reverse('courses:detail', kwargs={'slug':self.course.slug})
+        return reverse('courses:lecture-detail', kwargs={
+                                                "cslug": self.course.slug,
+                                                "lslug": self.slug,
+                                                })
 
 def pre_save_course_receiver(sender , instance, *args, **kwargs): 
     if not instance.slug:

@@ -12,7 +12,7 @@ from django.views.generic import (
     RedirectView
 )
 
-from .models import Course 
+from .models import Course, Lecture 
 from courses.mixins import MemberRequiredMixin, StaffMemberRequiredMixin
 from .forms import CourseForm
 
@@ -28,6 +28,14 @@ class CourseCreateView(StaffMemberRequiredMixin, CreateView):
         obj.user = self.request.user
         obj.save()
         return super(CourseCreateView, self).form_valid(form)
+
+
+class LectureDetailView(MemberRequiredMixin, DetailView):
+    def get_object(self):
+        course_slug = self.kwargs.get("cslug")
+        lecture_slug = self.kwargs.get("lslug")
+        obj = get_object_or_404(Lecture, course__slug=course_slug, slug=lecture_slug)
+        return obj
 
 
 class CourseDetailView(MemberRequiredMixin, DetailView):

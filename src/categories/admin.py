@@ -10,8 +10,8 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
     form = CategoryAdminForm
-    class Meta:
-        model = Category
+    # class Meta:
+    #     model = Category
 
     def short_title(self, obj):
         return obj.title[:3]
