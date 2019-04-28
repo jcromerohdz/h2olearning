@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.db.models import Count
 from django.db.models.signals import pre_save
 
 from courses.utils import create_slug
@@ -17,14 +18,21 @@ class CategoryManager(models.Manager):
         return CategoryQuerySet(self.model, using=self._db)
 
     def all(self):
-        return self.get_queryset().all().active()
+        return self.get_queryset().all(
+        ).active().annotate(
+            courses_lenght=Count('primary_category')+Count('secondary_category')
+            ).prefetch_related('primary_category', 'secondary_category')
+
+        # qs = Category.objects.all()
+        # obj = qs.first()
+        # courses = obj.course_set.all()
 
 
 class Category(models.Model):
     title           = models.CharField(max_length=120)
     video           = models.ForeignKey(Video, null=True, blank=True, on_delete=models.CASCADE)
     slug            = models.SlugField(blank=True)
-    order           = PositionField(collection='category', blank=True)
+    order           = PositionField(blank=True)
     description     = models.TextField()
     active          = models.BooleanField(default=True)
     updated         = models.DateTimeField(auto_now=True)

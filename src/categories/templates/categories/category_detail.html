@@ -1,0 +1,11 @@
+{% extends "base.html"%}
+
+{%block content%}
+<div class='container'>
+    <div class='row'>
+        <h1> {{object.title}} </h1>
+    </div>
+    {{ object.primary_category.all }}
+    {% comment %} {{ object.secondary_category.all }} {% endcomment %}
+</div>
+{%endblock%}

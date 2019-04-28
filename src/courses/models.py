@@ -5,6 +5,7 @@ from django.db.models.signals import pre_save, post_save
 from django.db.models import Prefetch
 from django.utils.text import slugify
 
+from categories.models import  Category
 from videos.models import Video
 
 from .fields import PositionField
@@ -58,16 +59,18 @@ class CourseManager(models.Manager):
         return self.get_queryset().all().active()
 
 class Course(models.Model):
-    user            = models.ForeignKey(settings.AUTH_USER_MODEL,  on_delete=models.CASCADE)
-    title           = models.CharField(max_length=120)
-    slug            = models.SlugField(blank=True)
-    category        = models.CharField(max_length=120, choices=POS_CHOICES, default='main')
-    order           = PositionField(collection='category')
-    description     = models.TextField()
-    price           = models.DecimalField(max_digits=5, decimal_places=2)
-    active          = models.BooleanField(default=True)
-    updated         = models.DateTimeField(auto_now=True)
-    timestamp       = models.DateTimeField(auto_now_add=True)
+    user               = models.ForeignKey(settings.AUTH_USER_MODEL,  on_delete=models.CASCADE)
+    title              = models.CharField(max_length=120)
+    slug               = models.SlugField(blank=True)
+    # category         = models.CharField(max_length=120, choices=POS_CHOICES, default='main')
+    category           = models.ForeignKey(Category, related_name="primary_category", null=True, blank=True, on_delete=models.CASCADE)
+    secondary          = models.ManyToManyField(Category, related_name="secondary_category", blank=True)
+    order              = PositionField(collection='category')
+    description        = models.TextField()
+    price              = models.DecimalField(max_digits=5, decimal_places=2)
+    active             = models.BooleanField(default=True)
+    updated            = models.DateTimeField(auto_now=True)
+    timestamp          = models.DateTimeField(auto_now_add=True)
 
     objects = CourseManager()
 

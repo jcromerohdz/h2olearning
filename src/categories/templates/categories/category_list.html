@@ -1,0 +1,32 @@
+{% extends "base.html"%}
+
+{%block content%}
+
+    <div class="row">
+        <div class= "col-12">
+            <h1> Categories </h1>
+        </div>
+        <div class="col-3">
+        <div class="list-group">
+            {% for item in object_list %}
+                <a href="{{item.get_absolute_url}}" class="list-group-item list-group-item-action">
+            {{forloop.counter }} - {{item.title}}
+            
+            {% comment %} {% if item.courses_lenght > 0 %}
+            <span class="badge badge-primary">{{ item.courses_lenght }} Course {% if item.courses_lenght > 1 %}s{% endif %}</span>
+            {% endif %} 
+                </a>     {% endcomment %}
+
+            {% if item.primary_category.all.exists%}
+            <span class="badge badge-dark">{{ item.primary_category.all.count }} Course {% if item.primary_category.all.count > 1%}s{% endif %}</span>
+            {% endif %} 
+                </a>
+                {% if forloop.counter|divisibleby:2 %}  
+                    </div></div><div class="col-3"><div class="list-group">
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+   
+
+{%endblock%}
