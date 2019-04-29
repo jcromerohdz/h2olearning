@@ -4,6 +4,10 @@
 {% block content %}
     <h1>{{ object.title }}</h1>
     {% include 'videos/snippets/video-search-form.html' with request=request%}
+
+    {% if object.image %}
+        <img src='{{ object.image.url }}' class='img-responsive'>
+    {% endif %}
     
     {{ object.description|linebreaks }}
     {% if not object.is_owner%}

@@ -133,14 +133,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
+# STATIC_URL = '/static/'
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static_in_env/'),
+# ]
+# print(STATICFILES_DIRS)
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static_in_env/'),
+        os.path.join(BASE_DIR, 'static_in_env'),
 ]
-print(STATICFILES_DIRS)
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+VENV_PATH = os.path.dirname(BASE_DIR)
+# print(VENV_PATH)
+STATIC_ROOT = os.path.join(VENV_PATH, 'static_root') # AWS S3
 
-STATIC_URL = '/static/'
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(VENV_PATH, 'media_root')
