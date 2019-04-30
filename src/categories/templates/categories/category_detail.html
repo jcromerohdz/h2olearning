@@ -9,7 +9,17 @@
             {% render_video object.video %}
         </div>
     </div>
-    {{ object.primary_category.all }}
+    <div class="row">
+    {% for item in object.primary_category.all%}
+          <div class="col-sm-4">
+          {% include 'courses/snippets/thumnail_display.html' with course=item %}
+          </div> 
+          {%cycle '' '' '</div></div><div class="row"><div class="col-sm-4">'%}
+           
+        {% endfor %}
+
+    {% comment %} {{ object.primary_category.all }} {% endcomment %}
     {% comment %} {{ object.secondary_category.all }} {% endcomment %}
+    </div>
 </div>
 {%endblock%}

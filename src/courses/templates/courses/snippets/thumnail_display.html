@@ -1,0 +1,20 @@
+<div class="card" style="width: 18rem;">
+  {% if course.image %}  
+    <img class="card-img-top responsive" src="{{ course.image.url }}" alt="Card image cap">
+  {% endif %}
+  <div class="card-body">
+    <h5 class="card-title">{{ course.title }}</h5>
+    {% if course.description %}
+    <p class="card-text">{{course.description}}.</p>
+    {% endif %}
+    <p> 
+          {% if item.is_owner %}
+                Owned
+              {% else %}
+                <a href='{{ item.get_purchase_url }}'>Purchase</a>
+                {{item.display_price}}
+           {% endif %}    
+    </p>
+    <a href="{{course.get_absolute_url}}" class="btn btn-primary">Go to course</a>
+  </div>
+</div>
