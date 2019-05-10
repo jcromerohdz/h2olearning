@@ -17,3 +17,11 @@ class CategoryListView(ListView):
 
 class CategoryDetailView(DetailView):
     queryset = Category.objects.all()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CategoryDetailView, self).get_context_data(*args, **kwargs)
+        obj = context.get("object")
+        qs1 = obj.primary_category.all().owned(self.request.user)
+        qs = (qs1).distinct()
+        context['courses'] = qs
+        return context

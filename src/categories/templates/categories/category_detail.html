@@ -10,13 +10,13 @@
         </div>
     </div>
     <div class="row">
-    {% for item in object.primary_category.all%}
+    {% for item in courses %}
           <div class="col-sm-4">
           {% include 'courses/snippets/thumnail_display.html' with course=item %}
           </div> 
           {%cycle '' '' '</div></div><div class="row"><div class="col-sm-4">'%}
            
-        {% endfor %}
+    {% endfor %}
 
     {% comment %} {{ object.primary_category.all }} {% endcomment %}
     {% comment %} {{ object.secondary_category.all }} {% endcomment %}

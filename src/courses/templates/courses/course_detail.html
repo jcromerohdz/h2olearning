@@ -1,27 +1,42 @@
 
 {% extends 'base.html' %}
 {% load humanize %}
-{% block content %}
-    <h1>{{ object.title }}</h1>
-    {% include 'videos/snippets/video-search-form.html' with request=request%}
 
-    {% if object.image %}
-        <img src='{{ object.image.url }}' class='img-responsive'>
-    {% endif %}
-    
-    {{ object.description|linebreaks }}
-    {% if not object.is_owner%}
-        <a href='{{ object.get_purchase_url }}'>Purchase</a>
-         {{ object.display_price}}
-    {% endif %}
+{% block content %}
+<div class='container'>
+    <div class="row">
+        <div class="col-sm-6">
+        <h1>{{ object.title }}</h1>
+        {% include 'videos/snippets/video-search-form.html' with request=request%}
+
+        {% if object.image %}
+            <img src='{{ object.image.url }}' class='img-responsive'>
+        {% endif %}
+        
+        {{ object.description|linebreaks }}
+        {% if not object.is_owner%}
+            <a href='{{ object.get_purchase_url }}'>Purchase</a>
+            {{ object.display_price}}
+        {% endif %}
+        </div>
+    </div>
     
     {% comment %} {{ object.price|floatformat:2|intcomma}}  {% endcomment %}
-
-    <ul>
+    {% for item in object.lecture_set.all %}
+    <h3>Lectures</h3>
+    <div class="list-group">
+        <a class="list-group-item" href='{{ item.get_absolute_url }}'>{{ item.title }}</a>
+        {% empty %}
+        <p class="lead">Lectures comming soon!</p>
+    </div>
+    {% endfor %}
+    {% comment %} <ul>
         {% for item in object.lecture_set.all %}
             <li>{{ item.order }} <a href='{{ item.get_absolute_url }}'>{{ item.title }}</a></li>
             {% empty %}
             <li>No lectures found</li>
         {% endfor %}
-    </ul>
+    </ul> {% endcomment %}
+    
+</div>
 {% endblock %}
