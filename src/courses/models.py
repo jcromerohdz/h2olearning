@@ -47,7 +47,7 @@ class CourseQuerySet(models.query.QuerySet):
 
     def owned(self, user):
 
-        if user.is_authenticated():
+        if user.is_authenticated:
             qs = MyCourses.objects.filter(user=user)
         else:
             qs = MyCourses.objects.none()
@@ -105,7 +105,7 @@ class Course(models.Model):
 
     def get_purchase_url(self):
         # return "/videos/{slug_arg}".format(slug_arg=self.slug)
-        return reverse('courses:purchase', kwargs={'slug':self.slug})
+        return reverse('courses:purchase', kwargs={'slugs':self.slug})
 
     def display_price(self):
         return make_display_price(self.price)
@@ -116,6 +116,7 @@ class Lecture(models.Model):
     title           = models.CharField(max_length=120)
     order           = PositionField()
     slug            = models.SlugField(blank=True)
+    free            = models.BooleanField(default=False)
     description     = models.TextField(blank=True)
     updated         = models.DateTimeField(auto_now=True)
     timestamp       = models.DateTimeField(auto_now_add=True)

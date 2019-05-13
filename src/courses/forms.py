@@ -9,6 +9,7 @@ class LectureAdminForm(forms.ModelForm):
         fields = [
             'order',
             'title',
+            'free',
             'video',
             'description',
             'slug',
